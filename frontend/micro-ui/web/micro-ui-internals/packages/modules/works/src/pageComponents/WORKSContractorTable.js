@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useCallback} from 'react'
 import { Table } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -28,7 +28,15 @@ const WORKSContractorTable = () => {
   const { t } = useTranslation();
   const GetCell = (value) => <span className="cell-text">{value}</span>;
   const [focusIndex, setFocusIndex] = useState({ index: -1, type: "" });
-  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
+  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm({
+    defaultValues: {
+      offset: 0,
+      limit: 10,
+      sortBy: "commencementDate",
+      sortOrder: "DESC",
+      isConnectionSearch: true,
+    },
+  });
   const formValue = watch();
   const { errors } = localFormState;
   const [isErrors, setIsErrors] = useState(false);
@@ -60,7 +68,8 @@ const WORKSContractorTable = () => {
     },
     {
       Header: t("DEPARTMENT"),
-      Cell: () => <Dropdown 
+      Cell: () => 
+      <Dropdown 
       option={userUlbs} 
       optionKey={"department"} 
       value={department} 
@@ -110,7 +119,7 @@ const WORKSContractorTable = () => {
         value={registrationNumber}
         onChange={(e) =>setRegistrationNumber(e.target.value)}
       />
-        <CardLabelError style={errorStyle}>{!registrationNumber ? "Field Required":""}</CardLabelError>
+        <CardLabelError style={errorStyle}>{!registrationNumber ? t("REQUIRED_FIELD"):""}</CardLabelError>
       </div>
       ),
       mobileCell: (original) => GetMobCell(t(`ES_PT_COMMON_STATUS_${original?.workflowData?.state?.["state"]}`)),
@@ -156,7 +165,8 @@ const WORKSContractorTable = () => {
     },
     {
       Header: t("FROM_DATE"),
-      Cell: () =><DatePicker
+      Cell: ({row}) =><DatePicker
+                defaultValue={row.origina?.FromDate}
                 date={createdFromDate}
                 onChange={(d) => {
                 setCreatedFromDate(d);
@@ -166,12 +176,14 @@ const WORKSContractorTable = () => {
     },
     {
       Header: t("TO_DATE"),
-      Cell: () => <DatePicker
-                date={createdToDate}
+      Cell: ({row}) => {
+                return <DatePicker
+                // defaultValue={row.original?.ToDate}
+                date={row.original?.ToDate}
                 onChange={(d) => {
                   setCreatedToDate(d);
                 }}
-              />,
+              />},
       mobileCell: (original) => GetMobCell(t(`ES_PT_COMMON_STATUS_${original?.workflowData?.state?.["state"]}`)),
     },
     {
@@ -209,6 +221,27 @@ const WORKSContractorTable = () => {
     row.splice(recordId,1);
     setData(row)
   }
+
+  const onSort = useCallback((args) => {
+    if (args.length === 0) return;
+    setValue("sortBy", args.id);
+    setValue("sortOrder", args.desc ? "DESC" : "ASC");
+  }, []);
+
+  function onPageSizeChange(e) {
+    setValue("limit", Number(e.target.value));
+    handleSubmit(onSubmit)();
+  }
+
+  function nextPage() {
+    setValue("offset", getValues("offset") + getValues("limit"));
+    handleSubmit(onSubmit)();
+  }
+  function previousPage() {
+    setValue("offset", getValues("offset") - getValues("limit"));
+    handleSubmit(onSubmit)();
+  }
+
   const result=()=>{
   return  (
     <Table
@@ -224,19 +257,18 @@ const WORKSContractorTable = () => {
           },
         }; 
       }}
-      // currentPage={currentPage}
       columns={inboxColumns(data)}
-      // onPageSizeChange={props.onPageSizeChange}
-      // currentPage={props.currentPage}
-      // onNextPage={props.onNextPage}
-      // onPrevPage={props.onPrevPage}
-      // pageSizeLimit={props.pageSizeLimit}
-      // onSort={props.onSort}
-      // disableSort={props.disableSort}
-      // sortParams={props.sortParams}
-      // totalRecords={props.totalRecords}
+      onPageSizeChange={onPageSizeChange}
+      currentPage={getValues("offset") / getValues("limit")}
+      onNextPage={nextPage}
+      onPrevPage={previousPage}
+      pageSizeLimit={getValues("limit")}
+      onSort={onSort}
+      disableSort={false}
+      sortParams={[{ id: getValues("sortBy"), desc: getValues("sortOrder") === "DESC" ? true : false }]}
+   // totalRecords={props.totalRecords}
       manualPagination={false}
-    />
+      />
   )}
   return (
     <div>
