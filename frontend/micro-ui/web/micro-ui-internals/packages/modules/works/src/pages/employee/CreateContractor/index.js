@@ -118,9 +118,9 @@ const NewApplication = () => {
         config={config.body}
         userType={"employee"}
         onFormValueChange={onFormValueChange}
-        isDisabled={!canSubmit}
+        isDisabled={canSubmit}
         label={t("CS_CREATE_CONTRACTOR_RECORD")}
-        onSubmit={!onSubmit}
+        onSubmit={onSubmit}
         defaultValues={sessionFormData}
       ></FormComposer>
       {showToast && <Toast isDleteBtn={true} error={showToast?.key === "error" ? true : false} label={t(showToast?.message)} onClose={closeToast} />}
