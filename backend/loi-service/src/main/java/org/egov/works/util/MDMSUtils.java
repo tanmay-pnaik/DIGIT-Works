@@ -23,11 +23,9 @@ import static org.egov.works.util.LOIConstants.MDMS_MODULE_NAME;
 public class MDMSUtils {
 
 
-    private final LOIConfiguration config;
-
-    private final ServiceRequestRepository serviceRequestRepository;
-
     private final static String filterCode = "$.*.code";
+    private final LOIConfiguration config;
+    private final ServiceRequestRepository serviceRequestRepository;
 
     @Autowired
     public MDMSUtils(LOIConfiguration config, ServiceRequestRepository serviceRequestRepository) {
