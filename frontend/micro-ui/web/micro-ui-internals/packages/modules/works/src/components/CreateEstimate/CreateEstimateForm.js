@@ -4,6 +4,7 @@ import { Card, Header, CardSectionHeader, LabelFieldPair, CardLabel, CardText, C
 import { useTranslation } from 'react-i18next';
 import SubWorkTable from './SubWorkTable';
 import ProcessingModal from '../Modal/ProcessingModal';
+import RejectLOIModal from '../Modal/RejectLOIModal';
 
 const allowedFileTypes = /(.*?)(pdf|docx|msword|openxmlformats-officedocument|wordprocessingml|document|spreadsheetml|sheet)$/i;
 
@@ -218,13 +219,28 @@ const CreateEstimateForm = ({onFormSubmit}) => {
 
 
               {/* Modal */}
-              {showModal && <ProcessingModal
+              {/* {showModal && <ProcessingModal
                   t={t}
                   heading={"WORKS_PROCESSINGMODAL_HEADER"}
                   closeModal={() => setShowModal(false)}
                   actionCancelLabel={"WORKS_CANCEL"}
                   actionCancelOnSubmit={() => setShowModal(false)}
                   actionSaveLabel={"WORKS_FORWARD"}
+                  actionSaveOnSubmit={onFormSubmit}
+                  onSubmit={onFormSubmit}
+                  control={control}
+                  register={register}
+                  handleSubmit={handleSubmit}
+                  errors={errors}
+
+              />} */}
+              {showModal && <RejectLOIModal
+                  t={t}
+                  heading={"WORKS_REJECTLOIMODAL_HEADER"}
+                  closeModal={() => setShowModal(false)}
+                  actionCancelLabel={"WORKS_CANCEL"}
+                  actionCancelOnSubmit={() => setShowModal(false)}
+                  actionSaveLabel={"WORKS_REJECT"}
                   actionSaveOnSubmit={onFormSubmit}
                   onSubmit={onFormSubmit}
                   control={control}
