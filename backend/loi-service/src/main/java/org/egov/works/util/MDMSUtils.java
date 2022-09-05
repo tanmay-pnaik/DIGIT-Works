@@ -27,6 +27,8 @@ public class MDMSUtils {
 
     private final ServiceRequestRepository serviceRequestRepository;
 
+    private final static String filterCode = "$.*.code";
+
     @Autowired
     public MDMSUtils(LOIConfiguration config, ServiceRequestRepository serviceRequestRepository) {
         this.config = config;
@@ -56,10 +58,10 @@ public class MDMSUtils {
      * @return
      */
     public MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId) {
-        List<ModuleDetail> pgrModuleRequest = getLOIModuleRequest();
+        List<ModuleDetail> tenantModuleRequest = getLOIModuleRequest();
 
         List<ModuleDetail> moduleDetails = new LinkedList<>();
-        moduleDetails.addAll(pgrModuleRequest);
+        moduleDetails.addAll(tenantModuleRequest);
 
         MdmsCriteria mdmsCriteria = MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId)
                 .build();
@@ -79,9 +81,6 @@ public class MDMSUtils {
 
         // master details for TL module
         List<MasterDetail> loiMasterDetails = new ArrayList<>();
-
-        // filter to only get code field from master data
-        final String filterCode = "$.*.code";
 
         loiMasterDetails.add(MasterDetail.builder().name(MDMS_MASTER).filter(filterCode).build());
 
