@@ -28,7 +28,7 @@ import java.util.List;
 @javax.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2022-08-04T15:05:28.525+05:30")
 
 @Controller
-@RequestMapping("/loi-service/v1")
+@RequestMapping("/loi/v1")
 public class LetterOfIndentApiController {
 
     private final ObjectMapper objectMapper;
@@ -56,7 +56,7 @@ public class LetterOfIndentApiController {
                 LetterOfIndentRequest letterOfIndentRequest = letterOfIndentService.createLOI(body);
                 ResponseInfo responseInfo = responseInfoCreator.createResponseInfoFromRequestInfo(body.getRequestInfo(), true);
                 LetterOfIndentResponse letterOfIndentResponse = LetterOfIndentResponse.builder().responseInfo(responseInfo).letterOfIndents(Collections.singletonList(letterOfIndentRequest.getLetterOfIndent())).build();
-                return new ResponseEntity<LetterOfIndentResponse>(objectMapper.readValue("", LetterOfIndentResponse.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<LetterOfIndentResponse>(letterOfIndentResponse, HttpStatus.OK);
             } catch (IOException e) {
                 return new ResponseEntity<LetterOfIndentResponse>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
