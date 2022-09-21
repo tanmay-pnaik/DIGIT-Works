@@ -7,7 +7,6 @@ import { newConfig as newConfigLocal } from "../../../config/ContractorCreateCon
 import CreateContractorForm from '../../../components/CreateContractor/CreateContractorForm'
 const NewApplication = () => {
   const onFormSubmit = async(_data) => {
-    debugger
   }
 //   const { t } = useTranslation();
 //   const { state } = useLocation();
@@ -81,7 +80,7 @@ const NewApplication = () => {
   //   // if(!formData?.cpt?.details?.propertyId) setSubmitValve(false);
   // };
   // const onFormValueChange = (setValue, formData, formState) => {
-  //   console.log("sessionFormData",sessionFormData,formData)
+
   //   if (!_.isEqual(sessionFormData, formData)) {
   //     setSessionFormData({ ...sessionFormData, ...formData });
   //   }
@@ -101,7 +100,7 @@ const NewApplication = () => {
 
 
   // const onSubmit = (data) => {
-  //   console.log("contractor Data",data)
+ 
   // };
 
   // const closeToast = () => {
