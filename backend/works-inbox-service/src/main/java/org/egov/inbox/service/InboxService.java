@@ -10,6 +10,7 @@ import org.egov.inbox.repository.ElasticSearchRepository;
 import org.egov.inbox.repository.ServiceRequestRepository;
 import org.egov.inbox.util.ErrorConstants;
 import org.egov.inbox.util.EstimateServiceUtil;
+import org.egov.inbox.util.LOIServiceUtil;
 import org.egov.inbox.web.model.Inbox;
 import org.egov.inbox.web.model.InboxResponse;
 import org.egov.inbox.web.model.InboxSearchCriteria;
@@ -36,8 +37,9 @@ import java.util.stream.StreamSupport;
 
 import static org.egov.inbox.util.BSConstants.ACKNOWLEDGEMENT_IDS_PARAM;
 import static org.egov.inbox.util.BSConstants.LOCALITY_PARAM;
-import static org.egov.inbox.util.EstimateConstant.ESTIMATE_SERVICE;
-import static org.egov.inbox.util.EstimateConstant.OFFSET_PARAM;
+import static org.egov.inbox.util.EstimateConstant.*;
+import static org.egov.inbox.util.LOIConstant.*;
+
 
 @Slf4j
 @Service
@@ -59,6 +61,9 @@ public class InboxService {
 
     @Autowired
     private EstimateServiceUtil estimateServiceUtil;
+
+    @Autowired
+    private LOIServiceUtil loiServiceUtil;
 
     @Autowired
     public InboxService(InboxConfiguration config, ServiceRequestRepository serviceRequestRepository,
@@ -176,6 +181,18 @@ public class InboxService {
                     businessKeys.addAll(estimateNumbers);
                     moduleSearchCriteria.remove(LOCALITY_PARAM);
                     moduleSearchCriteria.remove(OFFSET_PARAM);
+                } else {
+                    isSearchResultEmpty = true;
+                }
+            }else  if (!ObjectUtils.isEmpty(processCriteria.getModuleName()) && processCriteria.getModuleName().equals(LOI_SERVICE)) {
+                List<String> loiNumbers = loiServiceUtil.fetchLOINumbersFromLOIService(criteria,
+                        StatusIdNameMap, requestInfo);
+                totalCount = loiNumbers != null && !loiNumbers.isEmpty() ? loiNumbers.size() : 0;
+                if (!CollectionUtils.isEmpty(loiNumbers)) {
+                    moduleSearchCriteria.put(ACKNOWLEDGEMENT_IDS_PARAM, loiNumbers);
+                    businessKeys.addAll(loiNumbers);
+                    moduleSearchCriteria.remove(LOCALITY_PARAM);
+                    moduleSearchCriteria.remove(LOI_OFFSET_PARAM);
                 } else {
                     isSearchResultEmpty = true;
                 }
