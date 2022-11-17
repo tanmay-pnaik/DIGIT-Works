@@ -54,9 +54,9 @@ public class EstimateApiController {
 
     @RequestMapping(value = "/_search", method = RequestMethod.POST)
     public ResponseEntity<EstimateResponse> estimateV1SearchPost(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper, @Valid @ModelAttribute EstimateSearchCriteria searchCriteria) {
-        List<Estimate> estimateList = estimateService.searchEstimate(requestInfoWrapper, searchCriteria);
+        EstimateResponse estimateResponse = estimateService.searchEstimate(requestInfoWrapper, searchCriteria);
         ResponseInfo responseInfo = responseInfoCreator.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true);
-        EstimateResponse estimateResponse = EstimateResponse.builder().responseInfo(responseInfo).estimates(estimateList).build();
+        estimateResponse.setResponseInfo(responseInfo);
         return new ResponseEntity<EstimateResponse>(estimateResponse, HttpStatus.OK);
     }
 

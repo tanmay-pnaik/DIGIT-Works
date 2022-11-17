@@ -35,4 +35,19 @@ public class EstimateRepository {
         List<Estimate> estimateList = jdbcTemplate.query(query, rowMapper, preparedStmtList.toArray());
         return estimateList;
     }
+
+
+    /**
+     * @param searchCriteria
+     * @return count of estimates based on given search criteria
+     */
+    public Integer getEstimatesCount(EstimateSearchCriteria searchCriteria) {
+        List<Object> preparedStmtList = new ArrayList<>();
+        String query = queryBuilder.getEstimatesCountQuery(searchCriteria, preparedStmtList);
+        List<Estimate> estimateList = jdbcTemplate.query(query, rowMapper, preparedStmtList.toArray());
+        if (estimateList != null && !estimateList.isEmpty()) {
+            return estimateList.size();
+        }
+        return 0;
+    }
 }

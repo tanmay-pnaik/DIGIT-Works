@@ -8,6 +8,7 @@ import org.egov.works.repository.EstimateRepository;
 import org.egov.works.validator.EstimateServiceValidator;
 import org.egov.works.web.models.Estimate;
 import org.egov.works.web.models.EstimateRequest;
+import org.egov.works.web.models.EstimateResponse;
 import org.egov.works.web.models.EstimateSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,11 +61,12 @@ public class EstimateService {
      * @param searchCriteria
      * @return
      */
-    public List<Estimate> searchEstimate(RequestInfoWrapper requestInfoWrapper, EstimateSearchCriteria searchCriteria) {
+    public EstimateResponse searchEstimate(RequestInfoWrapper requestInfoWrapper, EstimateSearchCriteria searchCriteria) {
         serviceValidator.validateSearchEstimate(requestInfoWrapper, searchCriteria);
         enrichmentService.enrichSearchEstimate(requestInfoWrapper.getRequestInfo(), searchCriteria);
 
         List<Estimate> estimateList = estimateRepository.getEstimate(searchCriteria);
+        Integer estimatesCount = estimateRepository.getEstimatesCount(searchCriteria);
 
         List<EstimateRequest> estimateRequestList = new LinkedList<>();
         for (Estimate estimate : estimateList) {
@@ -72,7 +74,9 @@ public class EstimateService {
             estimateRequestList.add(estimateRequest);
         }
 
-        return estimateList;
+        EstimateResponse estimateResponse = EstimateResponse.builder().estimates(estimateList).count(estimatesCount).build();
+
+        return estimateResponse;
     }
 
     /**

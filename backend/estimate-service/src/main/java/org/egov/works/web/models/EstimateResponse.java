@@ -36,5 +36,8 @@ public class EstimateResponse {
         return this;
     }
 
+    @JsonProperty("count")
+    private Integer count;
+
 }
 

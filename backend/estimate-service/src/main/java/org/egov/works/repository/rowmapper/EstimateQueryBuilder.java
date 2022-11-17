@@ -30,6 +30,14 @@ public class EstimateQueryBuilder {
     }
 
     public String getEstimateQuery(EstimateSearchCriteria searchCriteria, List<Object> preparedStmtList) {
+        StringBuilder queryBuilder = getEstimateQueryWithoutLimitAndOffset(searchCriteria, preparedStmtList);
+
+        addLimitAndOffset(queryBuilder, searchCriteria, preparedStmtList);
+
+        return queryBuilder.toString();
+    }
+
+    private StringBuilder getEstimateQueryWithoutLimitAndOffset(EstimateSearchCriteria searchCriteria, List<Object> preparedStmtList) {
         StringBuilder queryBuilder = new StringBuilder(FETCH_ESTIMATE_QUERY);
 
         List<String> ids = searchCriteria.getIds();
@@ -102,10 +110,7 @@ public class EstimateQueryBuilder {
         //TODO -estimateType
 
         addOrderByClause(queryBuilder, searchCriteria);
-
-        addLimitAndOffset(queryBuilder, searchCriteria, preparedStmtList);
-
-        return queryBuilder.toString();
+        return queryBuilder;
     }
 
     private void addLimitAndOffset(StringBuilder queryBuilder, EstimateSearchCriteria criteria, List<Object> preparedStmtList) {
@@ -168,5 +173,11 @@ public class EstimateQueryBuilder {
         ids.forEach(id -> {
             preparedStmtList.add(id);
         });
+    }
+
+    public String getEstimatesCountQuery(EstimateSearchCriteria searchCriteria, List<Object> preparedStmtList) {
+        StringBuilder queryBuilder = getEstimateQueryWithoutLimitAndOffset(searchCriteria, preparedStmtList);
+
+        return queryBuilder.toString();
     }
 }
