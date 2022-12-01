@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "337ac5a9-18ea-4514-9c34-13768252b616",
+		"name": "DIGIT-WORKS-Attandance-Register",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create - Register",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"apiInfo\": {\n      \"id\": \"api_id\",\n      \"version\": \"ver1.0\",\n      \"path\": \"/path\"\n    },\n    \"deviceDetail\": {\n      \"id\": \"did\",\n      \"signature\": \"signature\"\n    },\n    \"ts\": 0,\n    \"action\": \"string\",\n    \"key\": \"string\",\n    \"msgId\": \"string\",\n    \"requesterId\": \"string\",\n    \"authToken\": \"string\",\n    \"signature\": \"string\"\n  },\n  \"attendanceRegister\": {\n    \"tenantId\": \"pb.amritsar\",\n    \"name\": \"Class-10-E Physics\",\n    \"startDate\": 1665497225000,\n    \"endDate\": 1665497271000,\n    \"status\": \"ACTIVE\",\n    \"additionalDetails\": {}\n  }\n}\n"
+				},
+				"url": "http://localhost:8023/attendance/v1/_create"
+			},
+			"response": []
+		},
+		{
+			"name": "Update - Register",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"requestInfo\": {\n    \"apiInfo\": {\n      \"id\": \"api_id\",\n      \"version\": \"ver1.0\",\n      \"path\": \"/path\"\n    },\n    \"deviceDetail\": {\n      \"id\": \"did\",\n      \"signature\": \"signature\"\n    },\n    \"ts\": 0,\n    \"action\": \"string\",\n    \"key\": \"string\",\n    \"msgId\": \"string\",\n    \"requesterId\": \"string\",\n    \"authToken\": \"string\",\n    \"signature\": \"string\"\n  },\n  \"attendanceRegister\": {\n    \"tenantId\": \"pb.amritsar\",\n    \"name\": \"Class-10-E Physics\",\n    \"startDate\": 1665497225000,\n    \"endDate\": 1665497271000,\n    \"status\": \"ACTIVE\",\n    \"additionalDetails\": {}\n  }\n}\n"
+				},
+				"url": "http://localhost:8023/attendance/v1/_create"
+			},
+			"response": []
+		},
+		{
+			"name": "Search - Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"requestInfo\": {\r\n    \"apiInfo\": {\r\n      \"id\": \"api_id\",\r\n      \"version\": \"ver1.0\",\r\n      \"path\": \"/path\"\r\n    },\r\n    \"deviceDetail\": {\r\n      \"id\": \"did\",\r\n      \"signature\": \"signature\"\r\n    },\r\n    \"ts\": 0,\r\n    \"action\": \"string\",\r\n    \"key\": \"string\",\r\n    \"msgId\": \"string\",\r\n    \"requesterId\": \"string\",\r\n    \"authToken\": \"string\",\r\n    \"signature\": \"string\"\r\n  }\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8023/attendance/v1/_search?tenantId=pb.amritsar&registerNumber=REG/2022-23/001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8023",
+					"path": [
+						"attendance",
+						"v1",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "pb.amritsar"
+						},
+						{
+							"key": "registerNumber",
+							"value": "REG/2022-23/001"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

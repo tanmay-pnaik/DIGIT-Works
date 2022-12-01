@@ -53,5 +53,4 @@ public class AttendanceApiController {
         AttendanceRegisterResponse attendanceRegisterResponse = attendanceService.updateAttendanceRegister(attendanceRegisterRequest);
         return new ResponseEntity<AttendanceRegisterResponse>(attendanceRegisterResponse,HttpStatus.OK);
     }
-
 }
