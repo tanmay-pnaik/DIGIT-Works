@@ -1,19 +1,30 @@
 package org.egov.works.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import digit.models.coremodels.ProcessInstance;
+import digit.models.coremodels.ProcessInstanceResponse;
 import digit.models.coremodels.RequestInfoWrapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.User;
+import org.egov.tracer.model.CustomException;
 import org.egov.works.config.EstimateServiceConfiguration;
 import org.egov.works.producer.Producer;
 import org.egov.works.repository.EstimateRepository;
+import org.egov.works.repository.ServiceRequestRepository;
 import org.egov.works.validator.EstimateServiceValidator;
 import org.egov.works.web.models.Estimate;
 import org.egov.works.web.models.EstimateRequest;
+import org.egov.works.web.models.EstimateRequestWorkflow;
 import org.egov.works.web.models.EstimateSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -36,6 +47,12 @@ public class EstimateService {
 
     @Autowired
     private WorkflowService workflowService;
+
+    @Autowired
+    private ServiceRequestRepository repository;
+
+    @Autowired
+    private ObjectMapper mapper;
 
 
     /**
@@ -90,6 +107,20 @@ public class EstimateService {
     }
 
     public void elasticPush(EstimateRequest request) {
-        producer.push(serviceConfiguration.getSaveEstimateTopic(), request);
+        ProcessInstanceResponse processInstanceResponse = null;
+        StringBuilder searchUrl = workflowService.getprocessInstanceSearchURL(request.getEstimate().getTenantId(), request.getEstimate().getEstimateNumber());
+        Object result = repository.fetchResult(searchUrl, request.getRequestInfo());
+        try {
+            processInstanceResponse = mapper.convertValue(result, ProcessInstanceResponse.class);
+        } catch (IllegalArgumentException e) {
+            throw new CustomException("PARSING ERROR", "Failed to parse response of workflow processInstance search");
+        }
+
+        List<ProcessInstance> processInstances = processInstanceResponse.getProcessInstances();
+        Map<String, EstimateRequestWorkflow> businessIdToWorkflow = workflowService.getWorkflow(processInstances);
+        request.setWorkflow(businessIdToWorkflow.get(request.getEstimate().getEstimateNumber()));
+        request.getEstimate().setAdditionalDetails(processInstances.get(0));
+
+        producer.push(serviceConfiguration.getEstimateInboxTopic(), request);
     }
 }
