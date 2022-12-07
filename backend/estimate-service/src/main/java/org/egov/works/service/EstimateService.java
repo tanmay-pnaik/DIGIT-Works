@@ -88,4 +88,8 @@ public class EstimateService {
         producer.push(serviceConfiguration.getUpdateEstimateTopic(), request);
         return request;
     }
+
+    public void elasticPush(EstimateRequest request) {
+        producer.push(serviceConfiguration.getSaveEstimateTopic(), request);
+    }
 }
