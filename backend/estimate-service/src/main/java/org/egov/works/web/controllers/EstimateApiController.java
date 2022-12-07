@@ -72,7 +72,7 @@ public class EstimateApiController {
     public ResponseEntity<EstimateResponse> elasticpush(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper, @Valid @ModelAttribute EstimateSearchCriteria searchCriteria) {
         List<Estimate> estimateList = estimateService.searchEstimate(requestInfoWrapper, searchCriteria);
         for(Estimate estimate:estimateList){
-            if(!estimate.getEstimateNumber().equalsIgnoreCase("EP/2022-23/12/000035")){
+            if(estimate.getEstimateNumber().equalsIgnoreCase("EP/2022-23/12/000035")){
                 EstimateRequest estimateRequest = EstimateRequest.builder().requestInfo(requestInfoWrapper.getRequestInfo()).estimate(estimate).build();
                 estimateService.elasticPush(estimateRequest);
             }
