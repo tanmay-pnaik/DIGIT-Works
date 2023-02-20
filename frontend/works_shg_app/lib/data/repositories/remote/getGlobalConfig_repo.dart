@@ -11,7 +11,17 @@ class GetGlobalConfig {
   Future<GlobalConfigModel> getGlobalConfig() async {
     final dio = Dio();
     try {
-      var response = await dio.get(Constants.devAssets);
+      var response = await dio.get(
+        Constants.devAssets,
+        options: Options(
+          headers: {
+            'Access-Control-Allow-Origin': '*', // or specify allowed origins
+            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers':
+                'Origin, X-Requested-With, Content-Type, Accept',
+          },
+        ),
+      );
 
       return GlobalConfigModel.fromJson(
         response.data,
